@@ -110,6 +110,12 @@ void reverse_list(ListNode *&head)
     }
 }
 /*0) 创建链表:采用的是尾插法构建不带头结点的单链表*/
+/*
+在用new建立一个类的对象时，若存在用户定义的默认构造函数，则new T和new T()两写法效果相同，都会调用此默认构造函数；
+若未定义，new T会调用系统默认构造函数，new T()除了调用系统默认构造函数，还会给基本数据类型和指针类型的成员用0赋值，且该过程是递归的。
+即若该对象的某个成员对象未定义默认构造函数，那么该成员对象的基本数据类型和指针类型的成员同样会被以0赋值。
+故用new的时候请加上()
+*/
 ListNode* create()
 {
     ListNode *head,*p1,*p2;
@@ -117,7 +123,7 @@ ListNode* create()
     int n;
     while(cin>>n)
     {
-        p1 = new ListNode;//为该结点分配内存空间
+        p1 = new ListNode();//为该结点分配内存空间
         p1->data = n;
         if(head == NULL)
             head = p1;//头结点
