@@ -2,53 +2,63 @@
 /*重要的是实现思想,代码比较容易*/
 #include <iostream>
 #include <stack>
+#include <string>
 using namespace std;
-template<typename T> class QueueWithTwoStack
+class queue_stack
 {
-  public:
-    QueueWithTwoStack();
-    ~QueueWithTwoStack();
-    void appendTail(const T& node);
-    T deleteHead();
-  private:
-    stack<T> stack1;
-    stack<T> stack2;
+public:
+	queue_stack() {}
+	void transData(stack<int> &s1, stack<int> &s2);//从s1转移数据到s2
+	void add(int n);//添加元素
+	void poll();//弹出队列首元素
+	int peek();//获取队列头元素
+private:
+	stack<int> stack1;//作为接收数据栈
+	stack<int> stack2;//作为队列使用
 };
-template<typename T> QueueWithTwoStack<T>::QueueWithTwoStack()
+void queue_stack::transData(stack<int> &s1, stack<int> &s2)
 {
-
+	while (!s2.empty()) s2.pop();
+	while (!s1.empty())
+	{
+		s2.push(s1.top());
+		s1.pop();
+	}
 }
-template<typename T> QueueWithTwoStack<T>::~QueueWithTwoStack()
+//保证队列首元素和栈首元素顺序相同
+void queue_stack::add(int n)
 {
-
+	transData(stack2,stack1);
+	stack1.push(n);
+	transData(stack1, stack2);
 }
-template<typename T> void QueueWithTwoStack<T>::appendTail(const T& node)
+void queue_stack::poll()
 {
-     stack1.push(node);
+	if (!stack2.empty()) stack2.pop();
+	else return;
 }
-template<typename T> T QueueWithTwoStack<T>::deleteHead()
+int queue_stack::peek()
 {
-    if(stack2.size()<=0)
-    {
-        while(stack1.size()>0)
-        {
-            T &tmp = stack1.top();
-            stack1.pop();
-            stack2.push(tmp);
-        }
-    }
-    T head = stack2.top();
-    stack2.pop();
-    return head;
+	return stack2.top();
 }
 int main()
 {
-    QueueWithTwoStack<char> queue; 
-    queue.appendTail('a');
-    queue.appendTail('b');
-    queue.appendTail('c');
-    char head1 = queue.deleteHead();
-    char head2 = queue.deleteHead();
-    char head3 = queue.deleteHead();
-    cout<<head1<<" "<<head2<<" "<<head3<<endl;
+	queue_stack qu;
+	int n, x;
+	string str;
+	cin >> n;//多少次操作
+	while (n--)
+	{
+		cin >> str;
+		if (str == "add")
+		{
+			cin >> x;
+			qu.add(x);
+		}
+		else if (str == "poll")
+			qu.poll();
+		else if (str == "peek")
+			cout << qu.peek() << endl;
+	}
+	return 0;
 }
